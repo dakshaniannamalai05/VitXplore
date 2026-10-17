@@ -1,4 +1,5 @@
 // home.js
+const API_BASE = (window.location.port === "5500") ? "http://localhost:5000" : window.location.origin;
 
 // =========================
 // ✅ Elements
@@ -43,7 +44,7 @@ async function loadUser() {
   if (!token) return alert("Not logged in");
 
   try {
-    const res = await fetch("http://localhost:5000/api/user/me", {
+    const res = await fetch(`${API_BASE}/api/user/me`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!res.ok) throw new Error("Failed to fetch user");
@@ -91,7 +92,7 @@ async function sharePost() {
   if (!text && !mediaBase64) return alert("Post cannot be empty");
 
   try {
-    const res = await fetch("http://localhost:5000/api/posts", {
+    const res = await fetch(`${API_BASE}/api/posts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -121,7 +122,7 @@ async function loadPosts() {
   if (!token) return;
 
   try {
-    const res = await fetch("http://localhost:5000/api/posts", {
+    const res = await fetch(`${API_BASE}/api/posts`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!res.ok) throw new Error("Failed to fetch posts");
@@ -181,7 +182,7 @@ async function likePost(postId) {
   if (!token) return;
 
   try {
-    await fetch(`http://localhost:5000/api/posts/${postId}/like`, {
+    await fetch(`${API_BASE}/api/posts/${postId}/like`, {
       method: "PUT",
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -200,7 +201,7 @@ async function updateBio() {
 
   const token = getToken();
   try {
-    const res = await fetch("http://localhost:5000/api/user/update-bio", {
+    const res = await fetch(`${API_BASE}/api/user/update-bio`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -227,7 +228,7 @@ async function updateProfilePic(file) {
   const token = getToken();
 
   try {
-    const res = await fetch("http://localhost:5000/api/user/update-pic", {
+    const res = await fetch(`${API_BASE}/api/user/update-pic`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -264,7 +265,7 @@ async function loadSuggestions() {
   if (!token) return;
 
   try {
-    const res = await fetch("http://localhost:5000/api/user/users", {
+    const res = await fetch(`${API_BASE}/api/user/users`, {
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`
@@ -325,8 +326,8 @@ async function followUser(userId, btn) {
     const isFollowing = btn.classList.contains("following");
 
     const url = isFollowing
-      ? `http://localhost:5000/api/user/unfollow/${userId}` // unfollow API
-      : `http://localhost:5000/api/user/follow/${userId}`;  // follow API
+      ? `${API_BASE}/api/user/unfollow/${userId}` // unfollow API
+      : `${API_BASE}/api/user/follow/${userId}`;  // follow API
 
     const res = await fetch(url, {
       method: "POST",

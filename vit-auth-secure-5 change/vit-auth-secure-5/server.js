@@ -26,7 +26,7 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: allowedOrigins,
+  origin: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
@@ -45,7 +45,18 @@ app.use("/api/chat", chatRoutes);
 app.use("/api/chat", abuseRoute);
 
 // ✅ MongoDB Connection
-mongoose.connect(process.env.MONGO_URI)
+let mongoUri = (process.env.MONGO_URI || "").trim();
+if ((mongoUri.startsWith('"') && mongoUri.endsWith('"')) || (mongoUri.startsWith("'") && mongoUri.endsWith("'"))) {
+  mongoUri = mongoUri.slice(1, -1).trim();
+}
+if (mongoUri.startsWith("MONGO_URI=")) {
+  mongoUri = mongoUri.replace(/^MONGO_URI=/, "").trim();
+}
+if (!mongoUri) {
+  mongoUri = "mongodb+srv://dakshania21_db_user:87xw4CsfdfxEdA59@cluster0.enhhduk.mongodb.net/vitxplore?retryWrites=true&w=majority";
+}
+
+mongoose.connect(mongoUri)
   .then(() => console.log('✅ MongoDB Connected'))
   .catch(err => console.error('❌ MongoDB Connection Error:', err.message));
 
@@ -53,7 +64,7 @@ mongoose.connect(process.env.MONGO_URI)
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: allowedOrigins,
+    origin: "*",
     methods: ["GET", "POST"]
   }
 });

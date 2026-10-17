@@ -8,8 +8,8 @@ const generateOtp = require('../utils/generateOtp');
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        user: process.env.EMAIL_USER || 'shin9sho@gmail.com',
+        pass: process.env.EMAIL_PASS || 'qime hhne sjci ibmu'
     }
 });
 
@@ -37,7 +37,7 @@ exports.register = async (req, res) => {
     await user.save();
 
     await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+      from: process.env.EMAIL_USER || 'shin9sho@gmail.com',
       to: email,
       subject: "VITXPLORE OTP Verification",
       html: `
@@ -110,7 +110,7 @@ exports.login = async (req, res) => {
     // 4️⃣ Create token
     const token = jwt.sign(
       { id: user._id },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || "7vH!mZ9p@X3$eBqL1",
       { expiresIn: "1h" }
     );
 

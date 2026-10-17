@@ -59,8 +59,10 @@ document.addEventListener("DOMContentLoaded", () => {
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
   }
 
+  const API_BASE = (window.location.port === "5500") ? "http://localhost:5000" : window.location.origin;
+
   // ===== Load chat history =====
-  fetch(`http://localhost:5000/api/chat/${chatUserId}`, {
+  fetch(`${API_BASE}/api/chat/${chatUserId}`, {
     headers: { "Authorization": `Bearer ${token}` }
   })
     .then(res => {
@@ -85,7 +87,7 @@ async function checkAbuse(text) {
   }
 
   try {
-    const res = await fetch("http://localhost:5050/check-abuse", {
+    const res = await fetch(`${API_BASE}/api/chat/check-abuse`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -146,7 +148,7 @@ if (data.isAbusive) {
     if (isAbusive) return;
 
     try {
-      const res = await fetch("http://localhost:5000/api/chat/send", {
+      const res = await fetch(`${API_BASE}/api/chat/send`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

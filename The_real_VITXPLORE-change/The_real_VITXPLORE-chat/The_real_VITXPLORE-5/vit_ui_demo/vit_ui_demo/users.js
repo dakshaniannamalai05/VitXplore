@@ -7,7 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  fetch("http://localhost:5000/api/user/users", {
+  const API_BASE = (window.location.port === "5500") ? "http://localhost:5000" : window.location.origin;
+
+  fetch(`${API_BASE}/api/user/users`, {
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`

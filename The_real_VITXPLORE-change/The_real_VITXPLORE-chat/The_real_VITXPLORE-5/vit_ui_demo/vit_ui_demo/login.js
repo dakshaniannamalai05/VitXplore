@@ -17,8 +17,10 @@ btnLogin.onclick = async () => {
     return;
   }
 
+  const API_BASE = (window.location.port === "5500") ? "http://localhost:5000" : window.location.origin;
+
   try {
-    const res = await fetch("http://localhost:5000/api/auth/login", {
+    const res = await fetch(`${API_BASE}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password: pass })

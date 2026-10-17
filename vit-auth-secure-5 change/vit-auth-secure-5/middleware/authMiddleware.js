@@ -8,7 +8,7 @@ module.exports = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "7vH!mZ9p@X3$eBqL1");
 
     // ✅ Fetch user (only ID and name are needed)
     const user = await User.findById(decoded.id).select("_id name");
