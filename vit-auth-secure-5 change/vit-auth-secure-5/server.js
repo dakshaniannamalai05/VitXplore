@@ -47,6 +47,8 @@ app.use("/api/chat", chatRoutes);
 app.use("/api/chat", abuseRoute);
 
 // ✅ MongoDB Connection
+const DIRECT_URI = "mongodb://dakshania21_db_user:87xw4CsfdfxEdA59@ac-574c0ql-shard-00-00.enhhduk.mongodb.net:27017,ac-574c0ql-shard-00-01.enhhduk.mongodb.net:27017,ac-574c0ql-shard-00-02.enhhduk.mongodb.net:27017/vitxplore?ssl=true&replicaSet=atlas-c6ue6y-shard-0&authSource=admin&retryWrites=true&w=majority";
+
 let mongoUri = (process.env.MONGO_URI || "").trim();
 if ((mongoUri.startsWith('"') && mongoUri.endsWith('"')) || (mongoUri.startsWith("'") && mongoUri.endsWith("'"))) {
   mongoUri = mongoUri.slice(1, -1).trim();
@@ -54,15 +56,30 @@ if ((mongoUri.startsWith('"') && mongoUri.endsWith('"')) || (mongoUri.startsWith
 if (mongoUri.startsWith("MONGO_URI=")) {
   mongoUri = mongoUri.replace(/^MONGO_URI=/, "").trim();
 }
-if (!mongoUri || (!mongoUri.startsWith("mongodb://") && !mongoUri.startsWith("mongodb+srv://"))) {
-  mongoUri = "mongodb+srv://dakshania21_db_user:87xw4CsfdfxEdA59@cluster0.enhhduk.mongodb.net/vitxplore?retryWrites=true&w=majority";
+
+async function connectToMongo() {
+  const primaryUri = (mongoUri && (mongoUri.startsWith("mongodb://") || mongoUri.startsWith("mongodb+srv://")))
+    ? mongoUri
+    : DIRECT_URI;
+
+  try {
+    await mongoose.connect(primaryUri, { serverSelectionTimeoutMS: 5000 });
+    console.log('✅ MongoDB Connected successfully');
+  } catch (err) {
+    console.warn('⚠️ Primary Mongo URI connection failed:', err.message);
+    if (primaryUri !== DIRECT_URI) {
+      console.log('🔄 Attempting fallback to direct replica set URI...');
+      try {
+        await mongoose.connect(DIRECT_URI, { serverSelectionTimeoutMS: 5000 });
+        console.log('✅ MongoDB Connected successfully via direct replica set fallback');
+      } catch (fallbackErr) {
+        console.error('❌ MongoDB Fallback Connection Error:', fallbackErr.message);
+      }
+    }
+  }
 }
 
-mongoose.connect(mongoUri, {
-  serverSelectionTimeoutMS: 5000
-})
-  .then(() => console.log('✅ MongoDB Connected'))
-  .catch(err => console.error('❌ MongoDB Connection Error:', err.message));
+connectToMongo();
 
 // ✅ Socket.IO Setup
 const httpServer = createServer(app);
