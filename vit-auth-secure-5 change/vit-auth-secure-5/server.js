@@ -1,9 +1,11 @@
 require('dotenv').config();
 const dns = require('dns');
-try {
-  dns.setServers(['8.8.8.8', '1.1.1.1']);
-} catch (e) {
-  // Ignore if custom dns fails
+if (!process.env.RENDER) {
+  try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+  } catch (e) {
+    // Ignore if custom dns fails
+  }
 }
 const express = require('express');
 const mongoose = require('mongoose');
@@ -52,11 +54,13 @@ if ((mongoUri.startsWith('"') && mongoUri.endsWith('"')) || (mongoUri.startsWith
 if (mongoUri.startsWith("MONGO_URI=")) {
   mongoUri = mongoUri.replace(/^MONGO_URI=/, "").trim();
 }
-if (!mongoUri) {
+if (!mongoUri || (!mongoUri.startsWith("mongodb://") && !mongoUri.startsWith("mongodb+srv://"))) {
   mongoUri = "mongodb+srv://dakshania21_db_user:87xw4CsfdfxEdA59@cluster0.enhhduk.mongodb.net/vitxplore?retryWrites=true&w=majority";
 }
 
-mongoose.connect(mongoUri)
+mongoose.connect(mongoUri, {
+  serverSelectionTimeoutMS: 5000
+})
   .then(() => console.log('✅ MongoDB Connected'))
   .catch(err => console.error('❌ MongoDB Connection Error:', err.message));
 
