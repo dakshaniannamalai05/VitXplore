@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Users</title>
+  <style>
+    body { font-family: Arial; background: #f4f4f4; margin: 0; padding: 20px; }
+    h2 { text-align: center; }
+    .users-list { max-width: 500px; margin: 20px auto; display: flex; flex-direction: column; gap: 10px; }
+    .user-card {
+      background: #111; color: #fff; padding: 12px 15px; border-radius: 8px;
+      display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+      transition: 0.2s;
+    }
+    .user-card:hover { background: #222; }
+    .user-card img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+  </style>
+</head>
+<body>
+  <h2>Select a User to Chat</h2>
+  <div class="users-list" id="usersList"></div>
+
+  <script src="users.js"></script>
+</body>
+</html>

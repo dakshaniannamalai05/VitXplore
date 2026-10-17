@@ -1,0 +1,9 @@
+{
+  "name": "vitxplore-root",
+  "version": "1.0.0",
+  "description": "Root workspace script runner for VITXplore",
+  "scripts": {
+    "start": "npm --prefix \"vit-auth-secure-5 change/vit-auth-secure-5\" start",
+    "dev": "npm --prefix \"vit-auth-secure-5 change/vit-auth-secure-5\" run dev"
+  }
+}

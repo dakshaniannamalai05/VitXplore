@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../../vit-auth-secure-5"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "The_real_VITXPLORE-chat"
+	}
+}

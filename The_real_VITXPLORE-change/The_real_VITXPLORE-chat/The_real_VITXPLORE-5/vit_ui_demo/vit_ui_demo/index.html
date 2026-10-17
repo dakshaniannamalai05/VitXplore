@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VITXPLORE - Welcome</title>
+  <style>
+    /* ---------- Global Reset ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* Background Animation */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: url('https://www.transparenttextures.com/patterns/stardust.png');
+      opacity: 0.15;
+      animation: float 10s infinite linear;
+    }
+
+    @keyframes float {
+      from { background-position: 0 0; }
+      to { background-position: 1000px 1000px; }
+    }
+
+    /* Container Card */
+    .auth-container {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      position: relative;
+      z-index: 2;
+      animation: fadeInUp 1.2s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Logo with Glow */
+    .auth-icon {
+      width: 140px;
+      margin-bottom: 20px;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { filter: drop-shadow(0 0 5px #FFD700); }
+      to { filter: drop-shadow(0 0 15px #FFD700); }
+    }
+
+    /* Brand Title */
+    .brand-title {
+      font-size: 2.8rem;
+      font-weight: bold;
+      color: #FFD700; /* Gold Yellow */
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+    }
+
+    .welcome-text {
+      font-size: 1.1rem;
+      margin-bottom: 25px;
+      opacity: 0.95;
+    }
+
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      gap: 20px;
+    }
+
+    .primary-btn, .secondary-btn {
+      text-decoration: none;
+      padding: 14px 36px;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      transition: 0.3s ease;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, #FFD700, #FFC107);
+      color: #000;
+    }
+
+    .secondary-btn {
+      background: linear-gradient(135deg, #FFD700, #FFC107);
+      color: #000;
+    }
+
+    .primary-btn:hover, .secondary-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-container">
+    <!-- Logo -->
+    <img src="image.png" alt="VIT Logo" class="auth-icon">
+
+    <!-- Brand -->
+    <h1 class="brand-title">VITXPLORE</h1>
+    <p class="welcome-text">Especially for VIT Students</p>
+
+    <!-- Buttons -->
+    <div class="btn-group">
+      <a href="login.html" class="primary-btn">Login</a>
+      <a href="register.html" class="secondary-btn">Register</a>
+    </div>
+  </div>
+
+</body>
+</html>

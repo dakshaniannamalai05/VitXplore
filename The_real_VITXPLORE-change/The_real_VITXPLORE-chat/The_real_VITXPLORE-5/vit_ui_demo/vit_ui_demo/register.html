@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - VITXPLORE</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Smaller icon for Register page */
+    .auth-page .auth-icon {
+      width: 90px;
+      height: auto;
+      margin-bottom: 15px;
+    }
+
+    /* Error/Success message style */
+    .error-msg {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+
+    .success-msg {
+      color: green;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body class="auth-page">
+
+  <div class="auth-container">
+    <!-- Register Icon -->
+    <img src="register.png" alt="Register Icon" class="auth-icon">
+
+    <!-- Brand -->
+    <h1 class="brand-title">VIT<span class="highlight">XPLORE</span></h1>
+    <h2 class="form-title">Register</h2>
+
+    <!-- Register Form -->
+    <form id="registerForm" class="form" novalidate>
+      <input type="text" id="name" name="name" placeholder="Full Name" required>
+      <input type="email" id="email" name="email" placeholder="Email" required>
+      <input type="password" id="password" name="password" placeholder="Password" required>
+      <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+      
+      <button type="submit" id="btnRegister" class="primary-btn big-btn">Register</button>
+      <p id="msg"></p>
+    </form>
+
+    <!-- Switch to Login -->
+    <p class="switch-auth">
+      Already have an account? <a href="login.html">Login here</a>
+    </p>
+    <!-- OTP Section (Hidden initially) -->
+<div id="otpSection" style="display:none; margin-top:15px;">
+  <input
+    type="text"
+    id="otp"
+    placeholder="Enter OTP"
+    maxlength="6"
+    required
+  />
+  <button
+    type="button"
+    id="btnVerifyOtp"
+    class="primary-btn big-btn"
+    style="margin-top:10px;"
+  >
+    Verify OTP
+  </button>
+</div>
+
+  </div>
+
+  <!-- Script: send data to backend -->
+ <script>
+const registerForm = document.getElementById("registerForm");
+const msg = document.getElementById("msg");
+const otpSection = document.getElementById("otpSection");
+const btnVerifyOtp = document.getElementById("btnVerifyOtp");
+
+let registeredEmail = "";
+
+// ========================
+// REGISTER
+// ========================
+registerForm.addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim().toLowerCase();
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  msg.textContent = "";
+  msg.className = "";
+
+  if (!name || !email || !password || !confirmPassword) {
+    msg.className = "error-msg";
+    msg.textContent = "❌ All fields are required";
+    return;
+  }
+
+  if (!email.endsWith("@vitstudent.ac.in")) {
+    msg.className = "error-msg";
+    msg.textContent = "❌ Use VIT official email";
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    msg.className = "error-msg";
+    msg.textContent = "❌ Passwords do not match";
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:5000/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      registeredEmail = email;
+      msg.className = "success-msg";
+      msg.textContent = "✅ OTP sent to your email";
+      otpSection.style.display = "block";
+    } else {
+      msg.className = "error-msg";
+      msg.textContent = data.message || data.error || "❌ Registration failed";
+    }
+
+  } catch (err) {
+    msg.className = "error-msg";
+    msg.textContent = "❌ Server error";
+  }
+});
+
+// ========================
+// VERIFY OTP
+// ========================
+if (btnVerifyOtp) {
+  btnVerifyOtp.addEventListener("click", async function() {
+    const otp = document.getElementById("otp").value.trim();
+
+    if (!otp) {
+      msg.className = "error-msg";
+      msg.textContent = "❌ Enter OTP";
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: registeredEmail, otp })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        msg.className = "success-msg";
+        msg.textContent = "✅ OTP verified! Redirecting to login...";
+
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 2000);
+      } else {
+        msg.className = "error-msg";
+        msg.textContent = data.message || "❌ Invalid OTP";
+      }
+    } catch (err) {
+      msg.className = "error-msg";
+      msg.textContent = "❌ OTP verification failed";
+    }
+  });
+}
+
+</script>
+
+</body>
+</html>
